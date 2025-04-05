@@ -59,6 +59,7 @@ function App() {
         <div className="card">
           <div className="search">
             <input
+              placeholder="Enter City Name.."
               type="text"
               ref={cityRef}
               onChange={(e) => getCityNames(e.target.value)}

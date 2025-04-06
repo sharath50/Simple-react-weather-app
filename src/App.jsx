@@ -3,8 +3,8 @@ import { useRef, useState } from "react";
 function App() {
   const [weatherData, setWeatherData] = useState({});
   const [cityNames, setCityNames] = useState([]);
-  let Loading = false;
-  const cityRef = useState();
+  let [loading, setLoading] = useState(false);
+  const cityRef = useRef();
 
   // private api key
   const API_Key = "3e17506640f02a9938a0ec7cfa0bfa6a";
@@ -43,15 +43,14 @@ function App() {
   }
 
   const getWeatherData = async ({ lat, lon }) => {
-    Loading = true;
+    setLoading(true);
     setCityNames([]);
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_Key}`
     );
     const weatherData = await response.json();
     setWeatherData(weatherData);
-    console.log(weatherData);
-    Loading = false;
+    setLoading(false);
   };
   return (
     <>
@@ -62,7 +61,9 @@ function App() {
               placeholder="Enter City Name.."
               type="text"
               ref={cityRef}
-              onChange={(e) => getCityNames(e.target.value)}
+              onChange={(e) =>
+                e.target.value ? getCityNames(e.target.value) : null
+              }
             />
             <div className="list-items">
               {cityNames.map((city, index) => {
@@ -80,7 +81,7 @@ function App() {
             </div>
             <button onClick={getWeatherDataByName}>Get Weather</button>
           </div>
-          <span className={"hr-line " + Loading ? "visible" : ""}></span>
+          <span className={"hr-line " + loading ? "visible" : ""}></span>
           <div className="body">
             <div>
               <h3>Temperature</h3>
@@ -93,8 +94,14 @@ function App() {
             <div>
               <h3>{weatherData?.name}</h3>
               <p>{weatherData.sys?.country}</p>
-              {/* <p>{weatherData.weather["0"].main}</p>
-              <p>{weatherData.weather["0"].description}</p> */}
+              {weatherData.weather?.map((item, index) => {
+                return (
+                  <div style={{ margin: "0", padding: "0" }} key={index}>
+                    <p>{item.main}</p>
+                    <p>{item.description}</p>
+                  </div>
+                );
+              })}
               <p>{weatherData.weather?.icon}</p>
               <h3>Sunrise / Sunset</h3>
               <p>

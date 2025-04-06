@@ -10,6 +10,6 @@ In this project i use fetch API call to receive data from API end points
 
 - this is react.js project source code
 
-# installation
+## installation
 
 - npm run build

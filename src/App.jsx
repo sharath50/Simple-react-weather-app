@@ -24,7 +24,7 @@ function App() {
   async function getCityNames(cityName) {
     try {
       if (!cityName) {
-        setCityNames([]);
+        return setCityNames([]);
       }
       const response = await getCoordinates(cityName, 5);
       setCityNames([...response]);
@@ -61,9 +61,7 @@ function App() {
               placeholder="Enter City Name.."
               type="text"
               ref={cityRef}
-              onChange={(e) =>
-                e.target.value ? getCityNames(e.target.value) : null
-              }
+              onChange={(e) => getCityNames(e.target.value)}
             />
             <div className="list-items">
               {cityNames.map((city, index) => {
